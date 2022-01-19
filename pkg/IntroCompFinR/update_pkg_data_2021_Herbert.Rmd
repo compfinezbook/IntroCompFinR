@@ -21,11 +21,11 @@ getSymbols.yahoo("AMZN",
                  return.class = 'xts',
                  index.class  = 'Date',
                  from = "1998-01-01",
-                 to = "2020-12-31",
+                 to = "2021-12-31",
                  periodicity = "daily")
 x <- AMZN$AMZN.Adjusted
 colnames(x) <- colnames(amznDailyPrices2020)
-save(x, file = "./data/amznDailyPrices2020.rda")
+save(x, file = "./data/amznDailyPrices.rda")
 amznDailyPrices2020 <- x
 usethis::use_data(amznDailyPrices2020, overwrite = TRUE)
 ```
@@ -38,50 +38,50 @@ getSymbols.yahoo(symb,
                  return.class = 'xts',
                  index.class  = 'Date',
                  from = "1993-01-01",
-                 to = "2020-12-31",
+                 to = "2021-12-31",
                  periodicity = "daily")
 ```
 
 ```{r}
 x <- BA$BA.Adjusted
 colnames(x) <- colnames(baDailyPrices2020)
-save(x, file = "./data/baDailyPrices2020.rda")
+save(x, file = "./data/baDailyPrices.rda")
 baDailyPrices2020 <- x
 usethis::use_data(baDailyPrices2020, overwrite = TRUE)
 ```
 
 ```{r}
 x <- COST$COST.Adjusted
-colnames(x) <- colnames(costDailyPrices)
-save(x, file = "./data/costDailyPrices2020.rda")
+colnames(x) <- colnames(costDailyPrices2020)
+save(x, file = "./data/costDailyPrices.rda")
 costDailyPrices2020 <- x
 usethis::use_data(costDailyPrices2020, overwrite = TRUE)
 ```
 ```{r}
 x <- JWN$JWN.Adjusted
-colnames(x) <- colnames(jwnDailyPrices)
-save(x, file = "./data/jwnDailyPrices2020.rda")
+colnames(x) <- colnames(jwnDailyPrices2020)
+save(x, file = "./data/jwnDailyPrices.rda")
 jwnDailyPrices2020 <- x
 usethis::use_data(jwnDailyPrices2020, overwrite = TRUE)
 ```
 ```{r}
 x <- MSFT$MSFT.Adjusted
-colnames(x) <- colnames(msftDailyPrices)
-save(x, file = "./data/msftDailyPrices2020.rda")
+colnames(x) <- colnames(msftDailyPrices2020)
+save(x, file = "./data/msftDailyPrices.rda")
 msftDailyPrices2020 <- x
 usethis::use_data(msftDailyPrices2020, overwrite = TRUE)
 ```
 ```{r}
 x <- SBUX$SBUX.Adjusted
-colnames(x) <- colnames(sbuxDailyPrices)
-save(x, file = "./data/sbuxDailyPrices2020.rda")
+colnames(x) <- colnames(sbuxDailyPrices2020)
+save(x, file = "./data/sbuxDailyPrices.rda")
 sbuxDailyPrices2020 <- x
 usethis::use_data(sbuxDailyPrices2020, overwrite = TRUE)
 ```
 ```{r}
 x <- GSPC$GSPC.Adjusted
-colnames(x) <- colnames(sp500DailyPrices)
-save(x, file = "./data/sp500DailyPrices2020.rda")
+colnames(x) <- colnames(sp500DailyPrices2020)
+save(x, file = "./data/sp500DailyPrices.rda")
 sp500DailyPrices2020 <- x
 usethis::use_data(sp500DailyPrices2020, overwrite = TRUE)
 ```
@@ -91,7 +91,7 @@ getSymbols.yahoo(c("VFINX", "VEURX", "VEIEX", "VBISX", "VPACX"),
                  return.class = 'xts',
                  index.class  = 'Date',
                  from = "1995-01-01",
-                 to = "2020-12-31",
+                 to = "2021-12-31",
                  periodicity = "monthly")
 ```
 ```{r}
@@ -109,7 +109,7 @@ for(i in Vanguard){
   names(temp) <- tolower(i)
   VanguardPrices2020 <- cbind(VanguardPrices2020, temp)
 }
-save(VanguardPrices2020, file = "./data/VanguardPrices2020.rda")
+save(VanguardPrices2020, file = "./data/VanguardPrices.rda")
 
 usethis::use_data(VanguardPrices2020, overwrite = TRUE)
 ```
