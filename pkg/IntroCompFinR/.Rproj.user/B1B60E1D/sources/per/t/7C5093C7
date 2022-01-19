@@ -1,0 +1,24 @@
+{
+    "id": "7C5093C7",
+    "path": "D:/Dropbox/Intro to Computational Finance/FinBook/IntroCompFinR/pkg/IntroCompFinR/R/efficient.frontier.R",
+    "project_path": "R/efficient.frontier.R",
+    "type": "r_source",
+    "hash": "547111171",
+    "contents": "",
+    "dirty": false,
+    "created": 1610060758756.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1473459566,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1473459566,
+    "read_only": false,
+    "read_only_alternatives": []
+}

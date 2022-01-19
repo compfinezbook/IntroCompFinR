@@ -1,0 +1,33 @@
+{
+    "id": "09B49EDE",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1596823896489.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "expression": "VanguardPrices2020",
+        "caption": "VanguardPrices2020",
+        "totalObservations": 300,
+        "displayedObservations": 300,
+        "variables": 4,
+        "cacheKey": "C3CD5E2D",
+        "object": "VanguardPrices2020",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=VanguardPrices2020&cache_key=C3CD5E2D&max_cols=50",
+        "preview": 0,
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 32933049024053340,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1596823896489,
+    "read_only": false,
+    "read_only_alternatives": []
+}

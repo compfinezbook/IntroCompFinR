@@ -1,0 +1,122 @@
+---
+title: "Untitled"
+author: "Herbert Liu"
+date: "8/6/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(knitr)
+opts_knit$set(root.dir ="./IntroCompFinR")
+```
+
+```{r}
+library(quantmod)
+library(IntroCompFinR)
+```
+```{r}
+getSymbols.yahoo("AMZN",
+                 .GlobalEnv,
+                 return.class = 'xts',
+                 index.class  = 'Date',
+                 from = "1998-01-01",
+                 to = "2019-12-31",
+                 periodicity = "daily")
+x <- AMZN$AMZN.Adjusted
+colnames(x) <- colnames(amznDailyPrices)
+# save(x, file = "./data/amznDailyPrices2020.rda")
+amznDailyPrices2020 <- x
+usethis::use_data(amznDailyPrices2020, overwrite = TRUE)
+```
+
+
+```{r}
+symb <- c("BA", "COST", "JWN", "MSFT", "SBUX", "^GSPC")
+getSymbols.yahoo(symb,
+                 .GlobalEnv,
+                 return.class = 'xts',
+                 index.class  = 'Date',
+                 from = "1993-01-01",
+                 to = "2019-12-31",
+                 periodicity = "daily")
+```
+
+```{r}
+x <- BA$BA.Adjusted
+colnames(x) <- colnames(baDailyPrices)
+# save(x, file = "./data/baDailyPrices2020.rda")
+baDailyPrices2020 <- x
+usethis::use_data(baDailyPrices2020, overwrite = TRUE)
+```
+
+```{r}
+x <- COST$COST.Adjusted
+colnames(x) <- colnames(costDailyPrices)
+save(x, file = "./data/costDailyPrices2020.rda")
+costDailyPrices2020 <- x
+usethis::use_data(costDailyPrices2020, overwrite = TRUE)
+```
+```{r}
+x <- JWN$JWN.Adjusted
+colnames(x) <- colnames(jwnDailyPrices)
+# save(x, file = "./data/jwnDailyPrices2020.rda")
+jwnDailyPrices2020 <- x
+usethis::use_data(jwnDailyPrices2020, overwrite = TRUE)
+```
+```{r}
+x <- MSFT$MSFT.Adjusted
+colnames(x) <- colnames(msftDailyPrices)
+# save(x, file = "./data/msftDailyPrices2020.rda")
+msftDailyPrices2020 <- x
+usethis::use_data(msftDailyPrices2020, overwrite = TRUE)
+```
+```{r}
+x <- SBUX$SBUX.Adjusted
+colnames(x) <- colnames(sbuxDailyPrices)
+# save(x, file = "./data/sbuxDailyPrices2020.rda")
+sbuxDailyPrices2020 <- x
+usethis::use_data(sbuxDailyPrices2020, overwrite = TRUE)
+```
+```{r}
+x <- GSPC$GSPC.Adjusted
+colnames(x) <- colnames(sp500DailyPrices)
+# save(x, file = "./data/sp500DailyPrices2020.rda")
+sp500DailyPrices2020 <- x
+usethis::use_data(sp500DailyPrices2020, overwrite = TRUE)
+```
+```{r}
+getSymbols.yahoo(c("VFINX", "VEURX", "VEIEX", "VBISX", "VPACX"),
+                 .GlobalEnv,
+                 return.class = 'xts',
+                 index.class  = 'Date',
+                 from = "1995-01-01",
+                 to = "2019-12-31",
+                 periodicity = "monthly")
+```
+```{r}
+Vanguard <- c("VEURX", "VEIEX", "VBISX", "VPACX")
+```
+
+```{r}
+VanguardPrices2020 <- xts(VFINX$VFINX.Adjusted)
+names(VanguardPrices2020) <- "vfinx"
+for(i in Vanguard){
+  temp <- eval(parse(text = i))
+  # temp <- to.monthly(temp)
+  # head(temp)
+  temp <- temp[, ncol(temp)]
+  names(temp) <- tolower(i)
+  VanguardPrices2020 <- cbind(VanguardPrices2020, temp)
+}
+save(VanguardPrices2020, file = "./data/VanguardPrices2020.rda")
+
+usethis::use_data(VanguardPrices2020, overwrite = TRUE)
+```
+
+
+
+
+
+
+
