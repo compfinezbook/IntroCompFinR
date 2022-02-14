@@ -1,0 +1,221 @@
+# Portfolio Theory with Matrix Algebra {#Portfolio-Theory-with-Matrix-Algebra}
+
+Updated: May 13, 2021
+
+Copyright © Eric Zivot 2015, 2016, 2021
+
+
+In this chapter, we extend the mean-variance portfolio theory introduced
+in chapter \@ref(Introduction-to-Portfolio-Theory) to handle
+more than two risky assets. This extension allows the theory to be
+applied to the analysis of real world portfolios that consist of many
+risky assets as well as a risk-free asset. When working with large
+portfolios, the algebra of representing portfolio expected returns
+and variances becomes extremely cumbersome. As shown in chapter \@ref(Matrix-Algebra-Review),
+the use of matrix algebra can greatly simplify many of these computations.
+Matrix algebra formulations are also very useful when it comes to do actual computations on the computer. The matrix algebra formulas
+are easy to translate into matrix programming languages like R. Popular
+spreadsheet programs like Microsoft Excel, which are the workhorse
+programs of many financial houses, can also handle basic matrix calculations.
+All of this makes it worthwhile to become familiar with matrix techniques
+for portfolio calculations.
+
+
+This chapter is laid out as follows. Section 1 describes portfolios
+with $N$ risky assets using matrix algebra. The concept of portfolio
+risk diversification is elaborated using calculations for large portfolios.
+Sections 2 through 5 cover the matrix algebra calculations required
+for determining mean-variance efficient portfolios. Explicit formulas
+are given for the global minimum variance portfolio, a minimum variance
+portfolio that achieves a specified target expected return, and the
+tangency portfolio. A simple algorithm to easily trace out the risky
+asset only efficient frontier is also presented. Section 6 discusses
+some practical problems associated with very large portfolios, and
+section 7 introduces the **IntroCompFinR** functions for portfolio
+analysis. Section 9 gives a real-world application of the theory to
+asset allocation among Vanguard mutual funds.
+
+
+The examples in this chapter use the **corrplot**, **IntroCompFinR**
+and **PerformanceAnalytics** packages. Make sure these packages
+are installed and loaded in R before replicating the chapter examples.
+
+```{r, echo=TRUE}
+suppressPackageStartupMessages(library(corrplot))
+suppressPackageStartupMessages(library(IntroCompFinR))
+suppressPackageStartupMessages(library(PerformanceAnalytics))
+options(digits=3)
+```
+
+## Portfolio Analysis Functions in R {#Portfolio-Analysis-Functions}
+\index{Portfolio analysis functions}
+The package **IntroCompFinR** contains a few R functions for
+computing Markowitz mean-variance efficient portfolios allowing for
+short sales using matrix algebra computations. These functions allow
+for the easy computation of the global minimum variance portfolio,
+an efficient portfolio with a given target expected return, the tangency
+portfolio, and the efficient frontier. These functions are summarized
+in Table \@ref(tab:TablePorfolioFunctions).
+
+
+------------------------------------------------------------------------------------------
+**Function**                **Description**
+------------------------    --------------------------------------------------------------
+`getPortfolio`              create portfolio object 
+  
+`globalMin.portfolio`       compute global minimum variance portfolio 
+  
+`efficient.portfolio`       compute minimum variance portfolio subject to target return 
+  
+`tangency.portfolio`        compute tangency portfolio 
+  
+`efficient.frontier`        compute efficient frontier of risky assets 
+------------------------------------------------------------------------------------------
+
+Table: (\#tab:TablePorfolioFunctions) **IntroCompFinR** functions for computing mean-variance efficient portfolios
+
+
+The following examples illustrate the use of the functions in Table
+\@ref(tab:TablePorfolioFunctions) using the example data in Table
+\@ref(tab:Table-ThreeAssetExample):
+
+```{r echo=TRUE}
+asset.names <- c("MSFT", "NORD", "SBUX")
+mu.vec = c(0.0427, 0.0015, 0.0285)
+sigma.mat = matrix(c(0.0100, 0.0018, 0.0011,
+           0.0018, 0.0109, 0.0026,
+           0.0011, 0.0026, 0.0199),
+         nrow=3, ncol=3)
+r.f=0.005
+mu.vec
+sigma.mat
+r.f
+```
+
+To specify a `portfolio` object, you need an expected
+return vector and covariance matrix for the assets under consideration
+as well as a vector of portfolio weights. To create an equally weighted
+portfolio use:
+
+```{r echo=TRUE}
+
+library(IntroCompFinR)
+ew = rep(1,3)/3
+equalWeight.portfolio = getPortfolio(er=mu.vec,cov.mat=sigma.mat,weights=ew)
+class(equalWeight.portfolio)
+```
+
+Portfolio objects have the following components:
+
+```{r echo=TRUE}
+
+names(equalWeight.portfolio)
+```
+
+There are `print()`, `summary()` and `plot()`
+methods for portfolio objects. The `print()` method gives:
+
+```{r echo=TRUE}
+
+equalWeight.portfolio
+```
+
+The `plot()` method shows a bar chart of the portfolio weights:
+
+```{r PortMatrixPlotMethod, fig.cap='Plot method for objects of class "portfolio"', out.width='80%', fig.asp=.75, fig.align='center', echo=TRUE}
+
+plot(equalWeight.portfolio, col="cornflowerblue")
+```
+
+
+The resulting plot is shown in Figure \@ref(fig:PortMatrixPlotMethod).
+The global minimum variance portfolio (allowing for short sales) $\mathbf{m}$
+solves the optimization problem \@ref(eq:PortMatrixGlobalMinObjective)
+and is computed using \@ref(eq:PortMatrixGlobalMinSolution). To
+compute this portfolio use the function `globalMin.portfolio()`:
+
+```{r echo=TRUE}
+
+gmin.port = globalMin.portfolio(mu.vec, sigma.mat)
+class(gmin.port)
+gmin.port
+```
+
+A mean-variance efficient portfolio $\mathbf{x}$ that achieves the
+target expected return $\mu_{0}$ solves the optimization problem
+\@ref(eq:PortMatrixEfficientPortfolio2) and is computed using \@ref(eq:PortMatrixEfficientPortfolioSolution).
+To compute this portfolio for the target expected return $\mu_{0}=E[R_{\textrm{msft}}]=0.0427$
+use the `efficient.portfolio()` function:
+
+```{r echo=TRUE}
+
+target.return = mu.vec[1]
+e.port.msft = efficient.portfolio(mu.vec, sigma.mat, target.return)
+class(e.port.msft)
+e.port.msft
+```
+
+The tangency portfolio $\mathbf{t}$ is the portfolio of risky assets
+with the highest Sharpe's slope and has solutions given by \@ref(eq:PortMatrixTangencySolution).
+To compute this portfolio with $r_{f}=0.005$ use the `tangency.portfolio()`
+function:
+
+```{r echo=TRUE}
+
+tan.port = tangency.portfolio(mu.vec, sigma.mat, r.f)
+class(tan.port)
+tan.port
+```
+
+The the set of efficient portfolios of risky assets can be computed
+as a convex combination of any two efficient portfolios. It is convenient
+to use the global minimum variance portfolio as one portfolio and
+an efficient portfolio with target expected return equal to the maximum
+expected return of the assets under consideration as the other portfolio.
+Call these portfolios $\mathbf{m}$ and $\mathbf{x}$, respectively.
+For any number $\alpha$, another efficient portfolio can be computed
+as: 
+\[
+\mathbf{z}=\alpha\mathbf{x}+(1-\alpha)\mathbf{m}
+\]
+The function `efficient.frontier()` constructs the set of efficient
+portfolios using this method for a collection of $\alpha$ values
+on an equally spaced grid between $\alpha_{min}$ and $\alpha_{max}$.
+For example, to compute 20 efficient portfolios for values of $\alpha$
+between -2 and 1.5 use:
+
+```{r echo=TRUE}
+
+ef = efficient.frontier(mu.vec, sigma.mat, alpha.min=-0.5, 
+                        alpha.max=2, nport=20)
+attributes(ef)
+ef
+```
+
+Use the `summary()` method to show the weights of these portfolios.
+Use the `plot()` method to create a simple plot the efficient
+frontier:
+
+```{r PortMatrixMarkowitzPlotMethod, fig.cap='Plot method for objects of class "Markowitz"', out.width='80%', fig.asp=.75, fig.align='center', echo=TRUE}
+
+plot(ef)
+```
+
+
+The resulting plot is shown in Figure \@ref(fig:PortMatrixMarkowitzPlotMethod).
+To create a more elaborate plot of the efficient frontier showing
+the original assets and the tangency portfolio use:
+
+```{r PortMatrixEfficientFrontierPlot, fig.cap='Efficient frontier plot.', out.width='80%', fig.asp=.75, fig.align='center', echo=TRUE}
+
+plot(ef, plot.assets=T, col="blue", pch=16) 
+points(gmin.port$sd, gmin.port$er, col="green", pch=16, cex=2) 
+text(gmin.port$sd, gmin.port$er, labels = "Global min", pos = 4) 
+points(tan.port$sd, tan.port$er, col="red", pch=16, cex=2) 
+text(tan.port$sd, tan.port$er, labels = "Tangency", pos = 3) 
+sr.tan = (tan.port$er - r.f)/tan.port$sd 
+abline(a=r.f, b=sr.tan, col="green", lwd=2)
+```
+
+The resulting plot is shown in Figure \@ref(fig:PortMatrixEfficientFrontierPlot).
+
